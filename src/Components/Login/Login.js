@@ -8,17 +8,28 @@ import {
 import React from "react";
 import GoogleIcon from "@mui/icons-material/Google";
 import auth from "../../Firebase.init";
-import { useSignInWithGoogle } from "react-firebase-hooks/auth";
+import {
+  useSignInWithEmailAndPassword,
+  useSignInWithGoogle,
+} from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import Swal from "sweetalert2";
 const Login = () => {
   const navigate = useNavigate();
+  // sign with email and password
+  const [signInWithEmailAndPassword, user, EmalLoading, EmailError] =
+    useSignInWithEmailAndPassword(auth);
+  // react hook from
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (data) => {
+    console.log(data);
+    signInWithEmailAndPassword(data.email, data.password);
+  };
   // google login
   const [signInWithGoogle, userGoogle, loading, errorGoogle] =
     useSignInWithGoogle(auth);
@@ -26,8 +37,16 @@ const Login = () => {
     navigate("/");
   }
 
-  if (errorGoogle) {
-    console.log(errorGoogle);
+  if (EmailError) {
+    Swal.fire("Error!", `${EmailError.message}`, "error");
+    console.log(EmailError.message);
+  }
+  if (loading || EmalLoading) {
+    return (
+      <div className="min-h-[90vh] flex justify-center items-center">
+        <CircularProgress />
+      </div>
+    );
   }
   // react hook form
   return (
