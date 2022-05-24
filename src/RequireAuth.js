@@ -1,0 +1,25 @@
+import { CircularProgress } from "@mui/material";
+import React from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { Navigate, useLocation } from "react-router-dom";
+import auth from "./Firebase.init";
+
+const RequireAuth = ({ children }) => {
+  const [user, loading] = useAuthState(auth);
+  const location = useLocation();
+
+  if (loading) {
+    return (
+      <div className="min-h-[90vh] flex justify-center items-center">
+        <CircularProgress />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location }} replace></Navigate>;
+  }
+  return children;
+};
+
+export default RequireAuth;

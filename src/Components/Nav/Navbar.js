@@ -57,6 +57,7 @@ const ResponsiveAppBar = () => {
   const redirectToCart = () => {
     navigate("/cart");
   };
+
   return (
     <AppBar position="static" style={{ backgroundColor: "" }}>
       <Container maxWidth="xl">

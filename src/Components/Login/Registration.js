@@ -9,18 +9,18 @@ import React from "react";
 import GoogleIcon from "@mui/icons-material/Google";
 import auth from "../../Firebase.init";
 import {
-  useAuthState,
+  useCreateUserWithEmailAndPassword,
   useSignInWithEmailAndPassword,
   useSignInWithGoogle,
 } from "react-firebase-hooks/auth";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
+import { useAuthState } from "react-firebase-hooks/auth";
 const Login = () => {
   const navigate = useNavigate();
   // sign with email and password
-  const [signInWithEmailAndPassword, user, EmalLoading, EmailError] =
-    useSignInWithEmailAndPassword(auth);
+
   // react hook from
   const {
     register,
@@ -29,23 +29,23 @@ const Login = () => {
   } = useForm();
   const onSubmit = (data) => {
     console.log(data);
-    signInWithEmailAndPassword(data.email, data.password);
+    createUserWithEmailAndPassword(data.email, data.password);
   };
   // google login
   const [signInWithGoogle, userGoogle, loading, errorGoogle] =
     useSignInWithGoogle(auth);
-  const [user1, loading2, error2] = useAuthState(auth);
-
-  const location = useLocation();
-  let from = location.state?.from?.pathname || "/";
-  if (user1) {
-    navigate(from, { replace: true });
+  const [createUserWithEmailAndPassword, userEmail, EmalLoading, error] =
+    useCreateUserWithEmailAndPassword(auth);
+  const [user, loading2, error2] = useAuthState(auth);
+  if (user) {
+    navigate("/");
+    console.log(userEmail);
   }
 
-  if (EmailError || errorGoogle) {
+  if (error || errorGoogle) {
     return Swal.fire(
       "Error!",
-      `${EmailError?.message || errorGoogle?.message}`,
+      `${error?.message || errorGoogle?.message}`,
       "error"
     );
   }
@@ -63,11 +63,39 @@ const Login = () => {
         <CircularProgress />
       ) : (
         <div className="my-shadow w-96 mx-5 bg-white rounded">
-          <h1 className="text-center text-2xl font-semibold mt-5">Login</h1>
+          <h1 className="text-center text-2xl font-semibold mt-5">
+            Registration
+          </h1>
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="m-5 flex items-center flex-col"
           >
+            <div className="mb-10 w-full text-center">
+              <Input
+                style={{ width: "80%" }}
+                {...register("name", {
+                  minLength: {
+                    value: 5,
+                    message: "Name Must Be 6 Charechter",
+                  },
+                  required: {
+                    value: true,
+                    message: "Name is required",
+                  },
+                })}
+                placeholder="Type your Name"
+              />
+              {errors.email?.type === "required" && (
+                <div className="text-red-500 text-left px-8 w-full ">
+                  {errors.name.message}
+                </div>
+              )}
+              {errors.email?.type === "minLength" && (
+                <div className="text-red-500 text-left px-8 w-full ">
+                  {errors.name.message}
+                </div>
+              )}
+            </div>
             <div className="mb-10 w-full text-center">
               <Input
                 style={{ width: "80%" }}
@@ -128,7 +156,7 @@ const Login = () => {
                 variant="contained"
                 style={{ width: "80%" }}
               >
-                Login
+                Sign Up
               </Button>
             </div>
             <Divider variant="middle" />
@@ -144,8 +172,8 @@ const Login = () => {
               </Button>
             </div>
             <div className="">
-              <Button as={Link} to="/registration">
-                new user ? / Register
+              <Button as={Link} to="/login">
+                Already user ? / Login
               </Button>
             </div>
           </form>
