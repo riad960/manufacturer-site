@@ -18,6 +18,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Badge } from "@mui/material";
 import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../../Firebase.init";
+import { signOut } from "firebase/auth";
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const ResponsiveAppBar = () => {
@@ -28,9 +29,14 @@ const ResponsiveAppBar = () => {
   };
   // user existance
   const [user, loading, error] = useAuthState(auth);
+
+  // logOut handle
+  const handleLogOut = () => {
+    signOut(auth);
+  };
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  console.log(error);
+
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -106,7 +112,7 @@ const ResponsiveAppBar = () => {
             >
               <MenuItem onClick={handleCloseNavMenu}>
                 <Typography textAlign="center">
-                  <Link className="px-28 " to="/">
+                  <Link style={{ width: "100%" }} className="px-28 " to="/">
                     HOME
                   </Link>
                 </Typography>
@@ -129,7 +135,7 @@ const ResponsiveAppBar = () => {
             variant="h5"
             noWrap
             component="a"
-            to="/h"
+            to="/"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -212,11 +218,28 @@ const ResponsiveAppBar = () => {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                      <Typography textAlign="center">{setting}</Typography>
-                    </MenuItem>
-                  ))}
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Link
+                      style={{ width: "100%" }}
+                      className="px-12"
+                      to="/profile"
+                    >
+                      Profile
+                    </Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Button
+                      onClick={handleLogOut}
+                      variant="contained"
+                      style={{
+                        background: "#f50057",
+                        width: "90%",
+                        margin: "0 auto",
+                      }}
+                    >
+                      LogOut
+                    </Button>
+                  </MenuItem>
                 </Menu>
               </Box>
             )}
