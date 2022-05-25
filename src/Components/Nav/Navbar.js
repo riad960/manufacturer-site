@@ -19,6 +19,7 @@ import { Badge } from "@mui/material";
 import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../../Firebase.init";
 import { signOut } from "firebase/auth";
+import { CartContext } from "../Cart/CartContext";
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const ResponsiveAppBar = () => {
@@ -29,7 +30,7 @@ const ResponsiveAppBar = () => {
   };
   // user existance
   const [user, loading, error] = useAuthState(auth);
-
+  const [cartItems, setCartItems] = React.useContext(CartContext);
   // logOut handle
   const handleLogOut = () => {
     signOut(auth);
@@ -177,7 +178,7 @@ const ResponsiveAppBar = () => {
             </Button>
           </Box>
           <div className="mx-2">
-            <Badge badgeContent={4} color="secondary">
+            <Badge badgeContent={cartItems?.length} color="secondary">
               <IconButton
                 onClick={redirectToCart}
                 style={{ color: "#fff" }}

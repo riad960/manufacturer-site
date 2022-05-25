@@ -1,10 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
+import GetUsers from "../../GetUsers";
 import Banner from "./Banner";
 import Product from "./Product";
-import Products from "./Product-details";
+
 import Stats from "./Stats";
 
 function Home() {
+  const [cart, setCart] = useState([]);
+  const Products = GetUsers();
+  const handleAddToCart = (data) => {
+    const newCart = [...cart, data];
+    setCart(newCart);
+  };
+
   return (
     <div className="">
       <Banner />
@@ -13,7 +21,7 @@ function Home() {
         {Products.map((product) => (
           <div className="my-5 mx-auto" key={product._id}>
             {" "}
-            <Product product={product} />
+            <Product product={product} cart={cart} handle={handleAddToCart} />
           </div>
         ))}
       </div>

@@ -5,7 +5,7 @@ import {
   Input,
   TextField,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import GoogleIcon from "@mui/icons-material/Google";
 import auth from "../../Firebase.init";
 import {
@@ -38,10 +38,11 @@ const Login = () => {
 
   const location = useLocation();
   let from = location.state?.from?.pathname || "/";
-  if (user1) {
-    navigate(from, { replace: true });
-  }
-
+  useEffect(() => {
+    if (user1 || userGoogle) {
+      navigate(from, { replace: true });
+    }
+  }, [user1, userGoogle, from, navigate]);
   if (EmailError || errorGoogle) {
     return Swal.fire(
       "Error!",

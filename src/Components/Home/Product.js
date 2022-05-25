@@ -4,20 +4,26 @@ import {
   CardActions,
   CardContent,
   CardMedia,
+  IconButton,
   Rating,
   Typography,
 } from "@mui/material";
 import LocalMallSharpIcon from "@mui/icons-material/LocalMallSharp";
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-
-function Product({ product }) {
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { CartContext } from "../Cart/CartContext";
+function Product({ product, handle, cart }) {
   const [value, setValue] = React.useState(2);
   const navigate = useNavigate();
-
+  const [cartItems, setCartItems] = useContext(CartContext);
   // handling buy now
   const handleBuyNow = (id) => {
     navigate(`/product/${product._id}`);
+  };
+  const handleCart = (data) => {
+    const newData = [...cartItems, data];
+    setCartItems(newData);
   };
   return (
     <div>
@@ -58,17 +64,29 @@ function Product({ product }) {
                 readOnly
               />
             </div>
-
-            <div className="mx-auto my-2">
-              {" "}
-              <Button
-                variant="contained"
-                // size="small"
-                endIcon={<LocalMallSharpIcon />}
-                onClick={() => handleBuyNow(`${product._id}`)}
-              >
-                Buy Now
-              </Button>
+            <div className="flex ">
+              <div className="mx-5 my-2">
+                {" "}
+                <Button
+                  variant="contained"
+                  // size="small"
+                  endIcon={<LocalMallSharpIcon />}
+                  onClick={() => handleBuyNow(`${product._id}`)}
+                >
+                  Buy Now
+                </Button>
+              </div>
+              <div className="mx-auto my-2">
+                {" "}
+                <Button
+                  variant="contained"
+                  // size="small"
+                  style={{ background: "#f50057" }}
+                  onClick={() => handleCart(product)}
+                >
+                  <ShoppingCartIcon />
+                </Button>
+              </div>
             </div>
           </div>
         </CardActions>
