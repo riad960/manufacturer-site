@@ -21,8 +21,10 @@ function Product({ product, handle, cart }) {
   const handleBuyNow = (id) => {
     navigate(`/product/${product._id}`);
   };
-  const handleCart = (data) => {
-    const newData = [...cartItems, data];
+  const handleCart = async (data) => {
+    const exists = cartItems.filter((x) => x._id != data._id);
+    console.log(exists);
+    const newData = [...exists, data];
     setCartItems(newData);
   };
   return (

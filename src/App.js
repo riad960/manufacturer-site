@@ -9,8 +9,11 @@ import Login from "./Components/Login/Login";
 import Registration from "./Components/Login/Registration";
 import Navabar from "./Components/Nav/Navbar";
 import NotFound from "./Components/NotFound/NotFound";
+import Portfolio from "./Components/Prtfolio/Portfolio";
 import RequireAuth from "./RequireAuth";
-
+import Blog from "./Components/Blog/Blog";
+import Payment from "./Components/Payment/Payment";
+import Dashboard from "./Components/Dashboard/Dashboard";
 function App() {
   return (
     <CartProvider>
@@ -28,6 +31,24 @@ function App() {
               }
             />
             <Route path="/login" element={<Login />} />
+            <Route
+              path="/payment/:id/:qty"
+              element={
+                <RequireAuth>
+                  <Payment />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <RequireAuth>
+                  <Dashboard />
+                </RequireAuth>
+              }
+            />
+            <Route path="/portfolio" element={<Portfolio />} />
+            <Route path="/blog" element={<Blog />} />
             <Route path="/registration" element={<Registration />} />
             <Route path="/product/:id" element={<ProductDetails />} />
             <Route path="/cart/:id" element={<Cart />} />

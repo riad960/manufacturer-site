@@ -9,10 +9,11 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import ArrowCircleLeftSharpIcon from "@mui/icons-material/ArrowCircleLeftSharp";
+import { CartContext } from "../Cart/CartContext";
 
 function ProductDetails() {
   const [Products, setProducts] = useState({});
@@ -22,12 +23,11 @@ function ProductDetails() {
       .then((data) => setProducts(data));
   }, []);
   // declaring varriable
-
+  const [cartItems, setCartItems] = useContext(CartContext);
   const [qty, setQty] = useState(0);
   const params = useParams();
   const navigate = useNavigate();
 
-  console.log(Products);
   //  handle add to cart
   const addToCartHandler = () => {};
   const handleQty = (e) => {
@@ -92,7 +92,7 @@ function ProductDetails() {
                   <Box sx={{ minWidth: 120 }}>
                     <FormControl fullWidth>
                       <InputLabel id="demo-simple-select-label">
-                        Quantity
+                        {qty}
                       </InputLabel>
                       <Select
                         onChange={handleQty}
@@ -115,7 +115,7 @@ function ProductDetails() {
               <div className="flex text-center justify-center py-2">
                 <Button
                   as={Link}
-                  to={`/cart/${params.id}?qty=${qty}`}
+                  to={`/payment/${params.id}/${qty}`}
                   variant="contained"
                   onClick={addToCartHandler}
                   disabled={Products?.countInStock === 0}

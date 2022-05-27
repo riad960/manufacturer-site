@@ -114,19 +114,27 @@ const ResponsiveAppBar = () => {
             >
               <MenuItem onClick={handleCloseNavMenu}>
                 <Typography textAlign="center">
-                  <Link style={{ width: "100%" }} className="px-28 " to="/">
+                  <Link style={{ width: "100%" }} className="px-5 " to="/">
                     HOME
                   </Link>
                 </Typography>
               </MenuItem>
               <MenuItem onClick={handleCloseNavMenu}>
                 <Typography textAlign="center">
-                  <Link to="/">HOME</Link>
+                  <Link
+                    style={{ width: "100%" }}
+                    className="px-5 "
+                    to="/portfolio"
+                  >
+                    PORTFOLIO
+                  </Link>
                 </Typography>
               </MenuItem>
               <MenuItem onClick={handleCloseNavMenu}>
                 <Typography textAlign="center">
-                  <Link to="/">HOME</Link>
+                  <Link style={{ width: "100%" }} className="px-5 " to="/blog">
+                    BLOG
+                  </Link>
                 </Typography>
               </MenuItem>
             </Menu>
@@ -162,13 +170,13 @@ const ResponsiveAppBar = () => {
               onClick={handleCloseNavMenu}
               sx={{ my: 2, color: "white", display: "block" }}
             >
-              <Link to="/about">About</Link>
+              <Link to="/portfolio">PORTFOLIO</Link>
             </Button>
             <Button
               onClick={handleCloseNavMenu}
               sx={{ my: 2, color: "white", display: "block" }}
             >
-              <Link to="/">HOME</Link>
+              <Link to="/blog">BLOG</Link>
             </Button>
             <Button
               onClick={handleCloseNavMenu}
@@ -229,6 +237,17 @@ const ResponsiveAppBar = () => {
                       Profile
                     </Link>
                   </MenuItem>
+                  {user && (
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Link
+                        style={{ width: "100%" }}
+                        className="px-12"
+                        to="/dashboard"
+                      >
+                        Dashboard
+                      </Link>
+                    </MenuItem>
+                  )}
                   <MenuItem onClick={handleCloseUserMenu}>
                     <Button
                       onClick={handleLogOut}
