@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import GetUsers from "../../GetUsers";
 import Banner from "./Banner";
 import Product from "./Product";
-
+import AddReviewes from "../Dashboard/AddReviwes";
 import Stats from "./Stats";
+import Review from "./Review";
 
 function Home() {
   const [cart, setCart] = useState([]);
@@ -27,6 +28,7 @@ function Home() {
       </div>
       <div className="">
         <Stats />
+        <Review />
       </div>
     </div>
   );

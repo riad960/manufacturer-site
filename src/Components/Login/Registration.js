@@ -17,6 +17,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { useAuthState } from "react-firebase-hooks/auth";
+import useToken from "../Hooks/useToken";
 const Login = () => {
   const navigate = useNavigate();
   // sign with email and password
@@ -28,7 +29,6 @@ const Login = () => {
     handleSubmit,
   } = useForm();
   const onSubmit = (data) => {
-    console.log(data);
     createUserWithEmailAndPassword(data.email, data.password);
   };
   // google login
@@ -37,9 +37,10 @@ const Login = () => {
   const [createUserWithEmailAndPassword, userEmail, EmalLoading, error] =
     useCreateUserWithEmailAndPassword(auth);
   const [user, loading2, error2] = useAuthState(auth);
-  if (user) {
+  const [token] = useToken(userGoogle || user || userEmail);
+  console.log(token);
+  if (token) {
     navigate("/");
-    console.log(userEmail);
   }
 
   if (error || errorGoogle) {
@@ -57,6 +58,7 @@ const Login = () => {
     );
   }
   // react hook form
+
   return (
     <div className="flex h-[80vh] items-center justify-center">
       {loading ? (

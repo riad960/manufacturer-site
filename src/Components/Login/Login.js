@@ -16,6 +16,7 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
+import useToken from "../Hooks/useToken";
 const Login = () => {
   const navigate = useNavigate();
   // sign with email and password
@@ -35,11 +36,11 @@ const Login = () => {
   const [signInWithGoogle, userGoogle, loading, errorGoogle] =
     useSignInWithGoogle(auth);
   const [user1, loading2, error2] = useAuthState(auth);
-
+  const [token] = useToken(userGoogle || user || user1);
   const location = useLocation();
   let from = location.state?.from?.pathname || "/";
   useEffect(() => {
-    if (user1 || userGoogle) {
+    if (token) {
       navigate(from, { replace: true });
     }
   }, [user1, userGoogle, from, navigate]);
@@ -58,6 +59,7 @@ const Login = () => {
     );
   }
   // react hook form
+
   return (
     <div className="flex h-[80vh] items-center justify-center">
       {loading ? (

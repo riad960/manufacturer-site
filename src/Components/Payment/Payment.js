@@ -57,7 +57,7 @@ function Payment() {
           Swal.fire("Success!", "Order Placed Succesfully", "success");
         }
         if (data.success === false) {
-          Swal.fire("Error!", `We have Previously Odrerded a item`, "error");
+          Swal.fire("Error!", `We have Previously `, "error");
         }
       });
   };

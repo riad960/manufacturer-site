@@ -34,6 +34,7 @@ const ResponsiveAppBar = () => {
   // logOut handle
   const handleLogOut = () => {
     signOut(auth);
+    localStorage.removeItem("accesToken");
   };
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -207,7 +208,7 @@ const ResponsiveAppBar = () => {
               </Button>
             ) : (
               <Box sx={{ flexGrow: 0 }}>
-                <Tooltip title="Open settings">
+                <Tooltip title="Dashboard">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar alt="Remy Sharp" src={user.photoURL} />
                   </IconButton>
@@ -229,6 +230,17 @@ const ResponsiveAppBar = () => {
                   onClose={handleCloseUserMenu}
                 >
                   <MenuItem onClick={handleCloseUserMenu}>
+                    <Button
+                      variant="contained"
+                      style={{
+                        width: "100%",
+                        margin: "0 auto",
+                      }}
+                    >
+                      Dashboard
+                    </Button>
+                  </MenuItem>
+                  <MenuItem onClick={handleCloseUserMenu}>
                     <Link
                       style={{ width: "100%" }}
                       className="px-12"
@@ -237,24 +249,32 @@ const ResponsiveAppBar = () => {
                       Profile
                     </Link>
                   </MenuItem>
-                  {user && (
-                    <MenuItem onClick={handleCloseUserMenu}>
-                      <Link
-                        style={{ width: "100%" }}
-                        className="px-12"
-                        to="/dashboard"
-                      >
-                        Dashboard
-                      </Link>
-                    </MenuItem>
-                  )}
+
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Link
+                      style={{ width: "100%" }}
+                      className="px-12"
+                      to={`/myOrder/${user.email}`}
+                    >
+                      My Orders
+                    </Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Link
+                      style={{ width: "100%" }}
+                      className="px-12"
+                      to="/addReview"
+                    >
+                      Add Review
+                    </Link>
+                  </MenuItem>
                   <MenuItem onClick={handleCloseUserMenu}>
                     <Button
                       onClick={handleLogOut}
                       variant="contained"
                       style={{
                         background: "#f50057",
-                        width: "90%",
+                        width: "60%",
                         margin: "0 auto",
                       }}
                     >

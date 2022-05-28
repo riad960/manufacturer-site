@@ -23,7 +23,7 @@ function Product({ product, handle, cart }) {
   };
   const handleCart = async (data) => {
     const exists = cartItems.filter((x) => x._id != data._id);
-    console.log(exists);
+
     const newData = [...exists, data];
     setCartItems(newData);
   };

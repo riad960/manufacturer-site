@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
+
 import Cart from "./Components/Cart/Cart";
 import { CartProvider } from "./Components/Cart/CartContext.js";
 import Footer from "./Components/Footer/Footer";
@@ -14,6 +15,9 @@ import RequireAuth from "./RequireAuth";
 import Blog from "./Components/Blog/Blog";
 import Payment from "./Components/Payment/Payment";
 import Dashboard from "./Components/Dashboard/Dashboard";
+import AddReviwes from "./Components/Dashboard/AddReviwes";
+import MyOrders from "./Components/Dashboard/MyOrders";
+import Profile from "./Components/Dashboard/Profile";
 function App() {
   return (
     <CartProvider>
@@ -40,6 +44,22 @@ function App() {
               }
             />
             <Route
+              path="/myOrder/:id"
+              element={
+                <RequireAuth>
+                  <MyOrders />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/addReview"
+              element={
+                <RequireAuth>
+                  <AddReviwes />
+                </RequireAuth>
+              }
+            />
+            <Route
               path="/dashboard"
               element={
                 <RequireAuth>
@@ -47,7 +67,9 @@ function App() {
                 </RequireAuth>
               }
             />
+
             <Route path="/portfolio" element={<Portfolio />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/registration" element={<Registration />} />
             <Route path="/product/:id" element={<ProductDetails />} />
