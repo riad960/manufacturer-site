@@ -6,28 +6,42 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Button } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { Button, Chip } from "@mui/material";
+import { useNavigate, useParams } from "react-router-dom";
+import auth from "../../Firebase.init";
+import { signOut } from "firebase/auth";
+import Swal from "sweetalert2";
 const MyOrders = () => {
   const params = useParams();
-
-  function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-  }
+  const navigate = useNavigate();
+  const [myOrder, setMyOrder] = React.useState([]);
   React.useEffect(() => {
-    fetch(`http://localhost:5000/orders/${params.id}`)
-      .then((res) => res.json())
-      .then((data) => console.log(data));
+    fetch(`https://still-garden-76565.herokuapp.com/orders/${params.id}`, {
+      method: "GET",
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("accesToken")}`,
+      },
+    })
+      .then((res) => {
+        if (res.status === 401 || res.status === 403) {
+          signOut(auth);
+          localStorage.removeItem("accesToken");
+          navigate("/");
+          Swal.fire(
+            "Error!",
+            `You are trying to access Forbidden link`,
+            "error"
+          );
+        }
+        return res.json();
+      })
+      .then((data) => setMyOrder(data));
   }, []);
-  const rows = [
-    createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-    createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-    createData("Eclair", 262, 16.0, 24, 6.0),
-    createData("Cupcake", 305, 3.7, 67, 4.3),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-  ];
+  const redirectToPayment = (id, qty) => {
+    navigate(`/checkout/${id}/${qty}`);
+  };
   return (
-    <div className="">
+    <div className="mt-5">
       <h1 className="text-xl font-semibold text-center my-5">My Orders</h1>
       <div className="">
         <TableContainer component={Paper}>
@@ -35,23 +49,50 @@ const MyOrders = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Email</TableCell>
+                <TableCell align="right">Customer Name</TableCell>
                 <TableCell align="right">Product</TableCell>
                 <TableCell align="right">Quantity</TableCell>
+                <TableCell align="right">Status</TableCell>
+                <TableCell align="right"></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
+              {myOrder?.map((row) => (
                 <TableRow
-                  key={row.name}
+                  key={row.product}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
-                    {row.name}
+                    {row.email}
                   </TableCell>
-                  <TableCell align="right">{row.calories}</TableCell>
-                  <TableCell align="right">{row.fat}</TableCell>
-                  <TableCell align="right">{row.carbs}</TableCell>
-                  <TableCell align="right">{row.protein}</TableCell>
+                  <TableCell align="right">{row.name}</TableCell>
+                  <TableCell align="right">{row.product}</TableCell>
+                  <TableCell align="right">{row.qty}</TableCell>
+                  <TableCell align="right">
+                    {row.paid ? (
+                      <div className="bg-[#43a047] w-16 text-center ml-auto py-2 rounded-3xl shadow-xl px-2 text-xs text-white font-semibold">
+                        Paid
+                      </div>
+                    ) : (
+                      <div className="bg-[#f50057] w-16 text-center ml-auto py-2 rounded-3xl btn-shadow px-2 text-xs text-white font-semibold">
+                        Not Paid
+                      </div>
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {!row.paid ? (
+                      <Button
+                        variant="contained"
+                        onClick={() => redirectToPayment(row._id, row.qty)}
+                      >
+                        Pay Now
+                      </Button>
+                    ) : (
+                      <Button variant="contained" disabled>
+                        Paid
+                      </Button>
+                    )}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

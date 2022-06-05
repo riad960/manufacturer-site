@@ -8,11 +8,16 @@ import {
   Rating,
   Typography,
 } from "@mui/material";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LocalMallSharpIcon from "@mui/icons-material/LocalMallSharp";
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { CartContext } from "../Cart/CartContext";
+import useAdmin from "../Hooks/useAdmin";
+import auth from "../../Firebase.init";
+import { motion } from "framer-motion";
+import { useAuthState } from "react-firebase-hooks/auth";
 function Product({ product, handle, cart }) {
   const [value, setValue] = React.useState(2);
   const navigate = useNavigate();
@@ -27,15 +32,19 @@ function Product({ product, handle, cart }) {
     const newData = [...exists, data];
     setCartItems(newData);
   };
+  const [user, loading, error] = useAuthState(auth);
+  const [admin] = useAdmin(user);
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="min-h-[610px]"
+    >
       <Card sx={{ maxWidth: 345 }}>
-        <CardMedia
-          component="img"
-          height="140"
-          image={product.image}
-          alt="green iguana"
-        />
+        <div className="max-h-[250px] overflow-hidden">
+          <img src={product.image} alt="" className="h-full object-center" />
+        </div>
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             {product.name}
@@ -66,34 +75,50 @@ function Product({ product, handle, cart }) {
                 readOnly
               />
             </div>
-            <div className="flex ">
-              <div className="mx-5 my-2">
+            {!admin && (
+              <div className="flex ">
+                <div className="mx-5 my-2">
+                  {" "}
+                  <Button
+                    variant="contained"
+                    // size="small"
+                    endIcon={<LocalMallSharpIcon />}
+                    onClick={() => handleBuyNow(`${product._id}`)}
+                  >
+                    Buy Now
+                  </Button>
+                </div>
+                <div className="mx-auto my-2">
+                  {" "}
+                  <Button
+                    variant="contained"
+                    // size="small"
+                    style={{ background: "#f50057" }}
+                    onClick={() => handleCart(product)}
+                  >
+                    <ShoppingCartIcon />
+                  </Button>
+                </div>
+              </div>
+            )}
+            {admin && (
+              <div className="mx-5 my-2 ">
                 {" "}
                 <Button
                   variant="contained"
                   // size="small"
-                  endIcon={<LocalMallSharpIcon />}
-                  onClick={() => handleBuyNow(`${product._id}`)}
+                  endIcon={<ManageAccountsIcon />}
+                  style={{ width: 280 }}
+                  onClick={() => navigate("/manageItems")}
                 >
-                  Buy Now
+                  Manage
                 </Button>
               </div>
-              <div className="mx-auto my-2">
-                {" "}
-                <Button
-                  variant="contained"
-                  // size="small"
-                  style={{ background: "#f50057" }}
-                  onClick={() => handleCart(product)}
-                >
-                  <ShoppingCartIcon />
-                </Button>
-              </div>
-            </div>
+            )}
           </div>
         </CardActions>
       </Card>
-    </div>
+    </motion.div>
   );
 }
 

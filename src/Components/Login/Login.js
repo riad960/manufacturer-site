@@ -17,6 +17,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import useToken from "../Hooks/useToken";
+import { motion } from "framer-motion";
 const Login = () => {
   const navigate = useNavigate();
   // sign with email and password
@@ -29,7 +30,6 @@ const Login = () => {
     handleSubmit,
   } = useForm();
   const onSubmit = (data) => {
-    console.log(data);
     signInWithEmailAndPassword(data.email, data.password);
   };
   // google login
@@ -43,7 +43,7 @@ const Login = () => {
     if (token) {
       navigate(from, { replace: true });
     }
-  }, [user1, userGoogle, from, navigate]);
+  }, [user1, userGoogle, from, navigate, token]);
   if (EmailError || errorGoogle) {
     return Swal.fire(
       "Error!",
@@ -61,7 +61,12 @@ const Login = () => {
   // react hook form
 
   return (
-    <div className="flex h-[80vh] items-center justify-center">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="flex h-[80vh] items-center justify-center"
+    >
       {loading ? (
         <CircularProgress />
       ) : (
@@ -154,7 +159,7 @@ const Login = () => {
           </form>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };
 

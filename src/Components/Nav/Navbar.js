@@ -20,6 +20,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../../Firebase.init";
 import { signOut } from "firebase/auth";
 import { CartContext } from "../Cart/CartContext";
+import useAdmin from "../Hooks/useAdmin";
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const ResponsiveAppBar = () => {
@@ -35,6 +36,7 @@ const ResponsiveAppBar = () => {
   const handleLogOut = () => {
     signOut(auth);
     localStorage.removeItem("accesToken");
+    navigate("/");
   };
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -59,6 +61,8 @@ const ResponsiveAppBar = () => {
   const redirectToCart = () => {
     navigate("/cart");
   };
+  // checking admin
+  const [admin] = useAdmin(user);
 
   return (
     <AppBar position="static" style={{ backgroundColor: "" }}>
@@ -81,7 +85,7 @@ const ResponsiveAppBar = () => {
               textDecoration: "none",
             }}
           >
-            LOGO
+            ProTool
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -125,6 +129,17 @@ const ResponsiveAppBar = () => {
                   <Link
                     style={{ width: "100%" }}
                     className="px-5 "
+                    to="/products"
+                  >
+                    PRODUCTS
+                  </Link>
+                </Typography>
+              </MenuItem>
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Typography textAlign="center">
+                  <Link
+                    style={{ width: "100%" }}
+                    className="px-5 "
                     to="/portfolio"
                   >
                     PORTFOLIO
@@ -158,7 +173,7 @@ const ResponsiveAppBar = () => {
               textDecoration: "none",
             }}
           >
-            LOGO
+            ProTool
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <Button
@@ -166,6 +181,12 @@ const ResponsiveAppBar = () => {
               sx={{ my: 2, color: "white", display: "block" }}
             >
               <Link to="/">HOME</Link>
+            </Button>
+            <Button
+              onClick={handleCloseNavMenu}
+              sx={{ my: 2, color: "white", display: "block" }}
+            >
+              <Link to="/products">PRODUCTS</Link>
             </Button>
             <Button
               onClick={handleCloseNavMenu}
@@ -179,24 +200,20 @@ const ResponsiveAppBar = () => {
             >
               <Link to="/blog">BLOG</Link>
             </Button>
-            <Button
-              onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: "white", display: "block" }}
-            >
-              <Link to="/">HOME</Link>
-            </Button>
           </Box>
-          <div className="mx-2">
-            <Badge badgeContent={cartItems?.length} color="secondary">
-              <IconButton
-                onClick={redirectToCart}
-                style={{ color: "#fff" }}
-                variant="contained"
-              >
-                <ShoppingCartIcon />
-              </IconButton>
-            </Badge>
-          </div>
+          {!admin && (
+            <div className="mx-2">
+              <Badge badgeContent={cartItems?.length} color="secondary">
+                <IconButton
+                  onClick={redirectToCart}
+                  style={{ color: "#fff" }}
+                  variant="contained"
+                >
+                  <ShoppingCartIcon />
+                </IconButton>
+              </Badge>
+            </div>
+          )}
           <div>
             {!user ? (
               <Button
@@ -210,7 +227,7 @@ const ResponsiveAppBar = () => {
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Dashboard">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Remy Sharp" src={user.photoURL} />
+                    <Avatar alt="Remy Sharp" src={user?.photoURL} />
                   </IconButton>
                 </Tooltip>
                 <Menu
@@ -240,34 +257,84 @@ const ResponsiveAppBar = () => {
                       Dashboard
                     </Button>
                   </MenuItem>
-                  <MenuItem onClick={handleCloseUserMenu}>
-                    <Link
-                      style={{ width: "100%" }}
-                      className="px-12"
-                      to="/profile"
-                    >
-                      Profile
-                    </Link>
-                  </MenuItem>
+                  {!admin && (
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Link
+                        style={{ width: "100%" }}
+                        className="px-12"
+                        to="/profile"
+                      >
+                        Profile
+                      </Link>
+                    </MenuItem>
+                  )}
 
-                  <MenuItem onClick={handleCloseUserMenu}>
-                    <Link
-                      style={{ width: "100%" }}
-                      className="px-12"
-                      to={`/myOrder/${user.email}`}
-                    >
-                      My Orders
-                    </Link>
-                  </MenuItem>
-                  <MenuItem onClick={handleCloseUserMenu}>
-                    <Link
-                      style={{ width: "100%" }}
-                      className="px-12"
-                      to="/addReview"
-                    >
-                      Add Review
-                    </Link>
-                  </MenuItem>
+                  {!admin && (
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Link
+                        style={{ width: "100%" }}
+                        className="px-12"
+                        to={`/myOrder/${user.email}`}
+                      >
+                        My Orders
+                      </Link>
+                    </MenuItem>
+                  )}
+                  {admin && (
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Link
+                        style={{ width: "100%" }}
+                        className="px-12"
+                        to={"/addItems"}
+                      >
+                        Add Items
+                      </Link>
+                    </MenuItem>
+                  )}
+                  {admin && (
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Link
+                        style={{ width: "100%" }}
+                        className="px-12"
+                        to={"/users"}
+                      >
+                        Manage Users
+                      </Link>
+                    </MenuItem>
+                  )}
+                  {admin && (
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Link
+                        style={{ width: "100%" }}
+                        className="px-12"
+                        to={"/manageItems"}
+                      >
+                        Manage Items
+                      </Link>
+                    </MenuItem>
+                  )}
+                  {admin && (
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Link
+                        style={{ width: "100%" }}
+                        className="px-12"
+                        to={"/manageOrder"}
+                      >
+                        Manage Orders
+                      </Link>
+                    </MenuItem>
+                  )}
+                  {!admin && (
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Link
+                        style={{ width: "100%" }}
+                        className="px-12"
+                        to="/addReview"
+                      >
+                        Add Review
+                      </Link>
+                    </MenuItem>
+                  )}
                   <MenuItem onClick={handleCloseUserMenu}>
                     <Button
                       onClick={handleLogOut}

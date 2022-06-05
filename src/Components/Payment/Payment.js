@@ -2,14 +2,15 @@ import { Numbers } from "@mui/icons-material";
 import { Button, CircularProgress, Input } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import auth from "../../Firebase.init";
 function Payment() {
+  const navigate = useNavigate();
   const params = useParams();
   const [Products, setProducts] = useState({});
   useEffect(() => {
-    fetch(`http://localhost:5000/products/${params.id}`)
+    fetch(`https://still-garden-76565.herokuapp.com/products/${params.id}`)
       .then((res) => res.json())
       .then((data) => setProducts(data));
   }, []);
@@ -28,6 +29,7 @@ function Payment() {
     qty: quantity,
     id: params.id,
     product: Products.name,
+    paid: false,
   };
   if (loading) {
     return (
@@ -43,7 +45,7 @@ function Payment() {
   // handling submit button
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch("http://localhost:5000/order", {
+    fetch("https://still-garden-76565.herokuapp.com/order", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -55,9 +57,10 @@ function Payment() {
         console.log(data);
         if (data.acknowledged) {
           Swal.fire("Success!", "Order Placed Succesfully", "success");
+          navigate(`/myOrder/${user?.email}`);
         }
-        if (data.success === false) {
-          Swal.fire("Error!", `We have Previously `, "error");
+        if (!data.acknowledged) {
+          Swal.fire("Error!", `You Previously have a order`, "error");
         }
       });
   };

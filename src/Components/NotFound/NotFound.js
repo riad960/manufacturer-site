@@ -1,8 +1,13 @@
 import React from "react";
-
+import { motion } from "framer-motion";
 function NotFound() {
   return (
-    <div style={{}}>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      style={{}}
+    >
       <div className="grid grid-cols-1 md:grid-cols-2">
         <div className=" flex items-center justify-center">
           <h1 className="text-[#f50057] font-bold text-2xl md:text-4xl my-10 md:mt-0">
@@ -17,7 +22,7 @@ function NotFound() {
           />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

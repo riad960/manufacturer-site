@@ -20,9 +20,8 @@ const Cart = () => {
     setCartItems(Deleted);
   };
 
-  console.log(cartItems);
   // useEffect(() => {
-  //   fetch(`http://localhost:5000/products/${params.id}`)
+  //   fetch(`https://still-garden-76565.herokuapp.com/products/${params.id}`)
   //     .then((res) => res.json())
   //     .then((data) => {
   //       setCart([...setCart, data]);

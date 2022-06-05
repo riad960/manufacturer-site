@@ -14,11 +14,14 @@ function Banner() {
     >
       <div className="w-full h-full bg-[#00000066] flex flex-col justify-center items-center min-h-[80vh] rounded-md my-shadow">
         <div className="  z-50 font-extrabold text-3xl lg:text-4xl text-white text-center">
-          Welcome To Product manufacturer website
+          Welcome To Pro Tool's website
         </div>
         <div className="text-center mt-12 text-white">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor dolore
-          maiores, impedit earum repudiandae ipsa.
+          Pro Tool Reviews provides power tool reviews and hand tool reviews and
+          <br />
+          comparisons for the construction industry professional. Find
+          information about tools and the world of commercial and residential
+          construction.
         </div>
         <div className="z-40 pt-24">
           <Button

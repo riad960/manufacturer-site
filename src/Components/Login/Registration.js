@@ -13,11 +13,13 @@ import {
   useSignInWithEmailAndPassword,
   useSignInWithGoogle,
 } from "react-firebase-hooks/auth";
+import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { useAuthState } from "react-firebase-hooks/auth";
 import useToken from "../Hooks/useToken";
+import { updateProfile } from "firebase/auth";
 const Login = () => {
   const navigate = useNavigate();
   // sign with email and password
@@ -28,8 +30,8 @@ const Login = () => {
     formState: { errors },
     handleSubmit,
   } = useForm();
-  const onSubmit = (data) => {
-    createUserWithEmailAndPassword(data.email, data.password);
+  const onSubmit = async (data) => {
+    await createUserWithEmailAndPassword(data.email, data.password);
   };
   // google login
   const [signInWithGoogle, userGoogle, loading, errorGoogle] =
@@ -37,8 +39,8 @@ const Login = () => {
   const [createUserWithEmailAndPassword, userEmail, EmalLoading, error] =
     useCreateUserWithEmailAndPassword(auth);
   const [user, loading2, error2] = useAuthState(auth);
-  const [token] = useToken(userGoogle || user || userEmail);
-  console.log(token);
+  const [token] = useToken(userGoogle || userEmail);
+
   if (token) {
     navigate("/");
   }
@@ -60,7 +62,12 @@ const Login = () => {
   // react hook form
 
   return (
-    <div className="flex h-[80vh] items-center justify-center">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="flex h-[80vh] items-center justify-center"
+    >
       {loading ? (
         <CircularProgress />
       ) : (
@@ -181,7 +188,7 @@ const Login = () => {
           </form>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };
 

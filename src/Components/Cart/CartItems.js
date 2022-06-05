@@ -50,8 +50,8 @@ function CartItems({ item, removeFromCart }) {
               label="Quantity"
             >
               {[...Array(item?.countInStock).keys()].map((item) => (
-                <MenuItem key={item + 1} value={(item + 1) * 5}>
-                  {(item + 1) * 5}
+                <MenuItem key={item + 1} value={item + 1}>
+                  {item + 1}
                 </MenuItem>
               ))}
             </Select>

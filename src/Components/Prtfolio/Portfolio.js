@@ -19,7 +19,8 @@ const Portfolio = () => {
           My Personal Portfolio
         </h2>
         <p className="para-font font-bold text-zinc-500 px-3 py-5 bg-slate-200 mx-3 rounded">
-          The project is a personal port
+          The project is a personal portfolio website. It is made with html ,
+          css , javascript and tailwind css.
         </p>
         <div className="my-5">
           {" "}
@@ -40,10 +41,12 @@ const Portfolio = () => {
           />
         </div>
         <h2 className="font-bold my-3 bg-[#f50057] mx-3 rounded px-2 py-1">
-          My Personal Portfolio
+          Roni Travel Agency
         </h2>
         <p className="para-font font-bold text-zinc-500 px-3 py-5 bg-slate-200 mx-3 rounded">
-          The project is a personal port
+          This is a travelling booking website . It is made with react ,
+          firebase . This hav a email password base auth system. also you can
+          log in with google
         </p>
         <div className="my-5">
           {" "}
@@ -63,10 +66,11 @@ const Portfolio = () => {
           />
         </div>
         <h2 className="font-bold my-3 bg-[#f50057] mx-3 rounded px-2 py-1">
-          My Personal Portfolio
+          Classic Watches
         </h2>
         <p className="para-font font-bold text-zinc-500 px-3 py-5 bg-slate-200 mx-3 rounded">
-          The project is a personal port
+          This is a full stack (mern) project. User can buy watches from here.
+          If user buys a product The stock of the product will decrease
         </p>
         <div className="my-5">
           {" "}

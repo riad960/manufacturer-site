@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   FormControl,
   InputLabel,
   MenuItem,
@@ -9,23 +10,33 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import ArrowCircleLeftSharpIcon from "@mui/icons-material/ArrowCircleLeftSharp";
 import { CartContext } from "../Cart/CartContext";
-
+import gsap from "gsap";
+import { useQuery } from "react-query";
+import { motion } from "framer-motion";
 function ProductDetails() {
-  const [Products, setProducts] = useState({});
-  useEffect(() => {
-    fetch(`http://localhost:5000/products/${params.id}`)
-      .then((res) => res.json())
-      .then((data) => setProducts(data));
-  }, []);
+  const params = useParams();
+  const fetchSingleProduct = async () => {
+    const Fetch = await fetch(
+      `https://still-garden-76565.herokuapp.com/products/${params.id}`
+    );
+    const data = await Fetch.json();
+    return data;
+  };
+  const {
+    data: Products,
+    isLoading,
+    refetch,
+  } = useQuery(["product", params.id], fetchSingleProduct);
+
   // declaring varriable
   const [cartItems, setCartItems] = useContext(CartContext);
   const [qty, setQty] = useState(0);
-  const params = useParams();
+
   const navigate = useNavigate();
 
   //  handle add to cart
@@ -33,8 +44,21 @@ function ProductDetails() {
   const handleQty = (e) => {
     setQty(e.target.value);
   };
+  // animation
+  if (isLoading) {
+    return (
+      <div className="min-h-[90vh] flex justify-center items-center">
+        <CircularProgress />
+      </div>
+    );
+  }
   return (
-    <div className="container">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="container"
+    >
       <div className="mx-2 my-3">
         <Button
           as={Link}
@@ -68,7 +92,7 @@ function ProductDetails() {
               </Typography>
               <Rating
                 name="half-rating-read"
-                defaultValue={Products.rating}
+                defaultValue={Number(Products?.rating)}
                 precision={0.5}
                 readOnly
               />
@@ -100,13 +124,13 @@ function ProductDetails() {
                         id="demo-simple-select"
                         label="Quantity"
                       >
-                        {[...Array(Products?.countInStock).keys()].map(
-                          (item) => (
-                            <MenuItem key={item + 1} value={(item + 1) * 5}>
-                              {(item + 1) * 5}
+                        {[...Array(Products?.countInStock).keys()]
+                          .filter((e) => e % 5 === 0)
+                          .map((item) => (
+                            <MenuItem key={item + 1} value={item + 1}>
+                              {item + 1}
                             </MenuItem>
-                          )
-                        )}
+                          ))}
                       </Select>
                     </FormControl>
                   </Box>
@@ -128,7 +152,7 @@ function ProductDetails() {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
